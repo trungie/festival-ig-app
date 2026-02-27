@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — ULTRA JUJU 2026</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #111;
+  color: #eee;
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+h1 {
+  font-size: 24px;
+  margin-bottom: 4px;
+  background: linear-gradient(90deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.subtitle { color: #888; font-size: 13px; margin-bottom: 20px; }
+
+/* Connection status */
+.status-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: #1a1a1a;
+  border-radius: 20px;
+  font-size: 13px;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #555;
+}
+.dot.on { background: #22c55e; }
+.dot.off { background: #ef4444; }
+
+/* Sections */
+.section {
+  background: #1a1a1a;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.btn:hover { opacity: 0.85; }
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: #3b82f6; color: #fff; }
+.btn-secondary { background: #333; color: #eee; }
+.btn-danger { background: #ef4444; color: #fff; }
+.btn-accent {
+  background: linear-gradient(135deg, #f09433, #dc2743, #bc1888);
+  color: #fff;
+}
+
+/* Notification input */
+.notif-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.notif-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: #222;
+  color: #eee;
+  font-size: 14px;
+}
+.notif-input::placeholder { color: #666; }
+
+/* Post list */
+.post-list { display: flex; flex-direction: column; gap: 8px; }
+.post-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #222;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border: 2px solid transparent;
+}
+.post-item:hover { background: #2a2a2a; }
+.post-item.current { border-color: #3b82f6; }
+.post-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: #333;
+  flex-shrink: 0;
+}
+.post-info { flex: 1; min-width: 0; }
+.post-info-user { font-size: 13px; font-weight: 600; }
+.post-info-caption {
+  font-size: 12px;
+  color: #888;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.post-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #333;
+  color: #888;
+  flex-shrink: 0;
+}
+.post-badge.video { background: #7c3aed22; color: #a78bfa; }
+.post-badge.active-idx { background: #3b82f622; color: #60a5fa; }
+
+/* State display */
+.state-info {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.state-chip {
+  font-size: 13px;
+  padding: 4px 12px;
+  background: #222;
+  border-radius: 6px;
+}
+.state-chip strong { color: #60a5fa; }
+
+/* Notification status */
+.notif-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+.notif-status.active { background: #f59e0b22; color: #fbbf24; }
+.notif-status.inactive { background: #22222; color: #666; }
+</style>
+</head>
+<body>
+
+<h1>ULTRA JUJU 2026</h1>
+<p class="subtitle">Admin Control Panel</p>
+
+<!-- Connection Status -->
+<div class="status-row" id="status-row">
+  <div class="status-pill">
+    <div class="dot" id="dot-ws"></div>
+    <span>WebSocket</span>
+  </div>
+  <div class="status-pill">
+    <div class="dot" id="dot-overlay"></div>
+    <span>Overlay</span>
+    <span id="count-overlay">0</span>
+  </div>
+  <div class="status-pill">
+    <div class="dot" id="dot-control"></div>
+    <span>Control</span>
+    <span id="count-control">0</span>
+  </div>
+</div>
+
+<!-- Current State -->
+<div class="section">
+  <div class="section-title">Current State</div>
+  <div class="state-info">
+    <div class="state-chip">Post <strong id="state-index">0</strong> of <strong id="state-total">0</strong></div>
+    <div class="state-chip" id="state-notif-wrap">
+      Notification: <span class="notif-status inactive" id="state-notif">OFF</span>
+    </div>
+  </div>
+</div>
+
+<!-- Scroll Controls -->
+<div class="section">
+  <div class="section-title">Scroll Controls</div>
+  <div class="controls">
+    <button class="btn btn-secondary" id="btn-back">&#9664; Back</button>
+    <button class="btn btn-primary" id="btn-next">Next &#9654;</button>
+  </div>
+</div>
+
+<!-- Notification Controls -->
+<div class="section">
+  <div class="section-title">Notification</div>
+  <div class="controls">
+    <button class="btn btn-accent" id="btn-notify">Send Notification</button>
+    <button class="btn btn-danger" id="btn-dismiss">Dismiss</button>
+    <button class="btn btn-secondary" id="btn-reload">Reload Overlay</button>
+  </div>
+  <div class="notif-row">
+    <input class="notif-input" id="notif-input" type="text" placeholder="Custom notification text (optional)">
+  </div>
+</div>
+
+<!-- Active Posts -->
+<div class="section">
+  <div class="section-title">Active Posts</div>
+  <div class="post-list" id="active-posts"></div>
+</div>
+
+<!-- Hidden Posts -->
+<div class="section">
+  <div class="section-title">Hidden Posts (in posts.json)</div>
+  <div class="post-list" id="hidden-posts"></div>
+</div>
+
+<script>
+let state = { posts: { active: [], hidden: [] }, currentIndex: 0, notificationActive: false };
+
+function renderPostItem(post, index, isCurrent, isHidden) {
+  const typeBadge = post.type === 'video'
+    ? '<span class="post-badge video">VIDEO</span>'
+    : '';
+  const idxBadge = isCurrent
+    ? '<span class="post-badge active-idx">CURRENT</span>'
+    : '';
+  const thumbSrc = post.type === 'video'
+    ? (post.media.replace(/\.[^.]+$/, '.jpg'))
+    : post.media;
+
+  return `
+    <div class="post-item ${isCurrent ? 'current' : ''}" ${!isHidden ? `onclick="gotoPost('${esc(post.id)}')"` : ''}>
+      <img class="post-thumb" src="${esc(thumbSrc)}" alt="" onerror="this.style.background='#444'">
+      <div class="post-info">
+        <div class="post-info-user">${esc(post.username)} — #${esc(post.id)}</div>
+        <div class="post-info-caption">${esc(post.caption)}</div>
+      </div>
+      ${typeBadge}${idxBadge}
+    </div>`;
+}
+
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function updateUI() {
+  const active = state.posts.active || [];
+  const hidden = state.posts.hidden || [];
+
+  // State info
+  document.getElementById('state-index').textContent = active.length > 0 ? state.currentIndex + 1 : 0;
+  document.getElementById('state-total').textContent = active.length;
+
+  const notifEl = document.getElementById('state-notif');
+  if (state.notificationActive) {
+    notifEl.className = 'notif-status active';
+    notifEl.textContent = 'ON';
+  } else {
+    notifEl.className = 'notif-status inactive';
+    notifEl.textContent = 'OFF';
+  }
+
+  // Connection counts
+  if (state.connectedClients) {
+    const oc = state.connectedClients.overlay || 0;
+    const cc = state.connectedClients.control || 0;
+    document.getElementById('dot-overlay').className = 'dot ' + (oc > 0 ? 'on' : 'off');
+    document.getElementById('count-overlay').textContent = oc;
+    document.getElementById('dot-control').className = 'dot ' + (cc > 0 ? 'on' : 'off');
+    document.getElementById('count-control').textContent = cc;
+  }
+
+  // Active posts
+  document.getElementById('active-posts').innerHTML = active.length
+    ? active.map((p, i) => renderPostItem(p, i, i === state.currentIndex, false)).join('')
+    : '<div style="color:#666;font-size:13px">No active posts</div>';
+
+  // Hidden posts
+  document.getElementById('hidden-posts').innerHTML = hidden.length
+    ? hidden.map((p, i) => renderPostItem(p, i, false, true)).join('')
+    : '<div style="color:#666;font-size:13px">No hidden posts</div>';
+}
+
+// ── Commands ──
+function send(msg) {
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify(msg));
+  }
+}
+
+function gotoPost(id) {
+  send({ type: 'goto', id });
+}
+
+document.getElementById('btn-next').onclick = () => send({ type: 'next' });
+document.getElementById('btn-back').onclick = () => send({ type: 'back' });
+document.getElementById('btn-dismiss').onclick = () => send({ type: 'dismiss-notify' });
+document.getElementById('btn-reload').onclick = () => send({ type: 'reload' });
+document.getElementById('btn-notify').onclick = () => {
+  const text = document.getElementById('notif-input').value.trim();
+  send({ type: 'notify', text: text || undefined });
+};
+
+// Enter key in notification input
+document.getElementById('notif-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('btn-notify').click();
+});
+
+// ── WebSocket ──
+let ws;
+function connect() {
+  const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  ws = new WebSocket(`${proto}//${location.host}`);
+
+  ws.onopen = () => {
+    document.getElementById('dot-ws').className = 'dot on';
+    ws.send(JSON.stringify({ type: 'register', role: 'admin' }));
+  };
+
+  ws.onclose = () => {
+    document.getElementById('dot-ws').className = 'dot off';
+    setTimeout(connect, 2000);
+  };
+
+  ws.onerror = () => ws.close();
+
+  ws.onmessage = (e) => {
+    let msg;
+    try { msg = JSON.parse(e.data); } catch { return; }
+
+    switch (msg.type) {
+      case 'state':
+        state = msg;
+        updateUI();
+        break;
+      case 'scroll':
+        state.currentIndex = msg.currentIndex;
+        state.notificationActive = msg.notificationActive || false;
+        updateUI();
+        break;
+      case 'notification':
+        state.notificationActive = msg.active;
+        updateUI();
+        break;
+    }
+  };
+}
+connect();
+updateUI();
+</script>
+</body>
+</html>

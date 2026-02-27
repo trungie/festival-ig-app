@@ -1,0 +1,31 @@
+{
+  "active": [
+    {
+      "id": "1",
+      "username": "ultrajuju2026",
+      "avatar": "./assets/avatars/juju.png",
+      "media": "./assets/posts/welcome.jpg",
+      "type": "image",
+      "caption": "Welcome to ULTRA JUJU 2026! 🎪🔥",
+      "likes": "4,892",
+      "comments": [
+        { "user": "festival_fan", "text": "LET'S GOOO" },
+        { "user": "juju_crew", "text": "🔥🔥🔥" }
+      ]
+    }
+  ],
+  "hidden": [
+    {
+      "id": "2",
+      "username": "ultrajuju2026",
+      "avatar": "./assets/avatars/juju.png",
+      "media": "./assets/posts/stage-reveal.mp4",
+      "type": "video",
+      "caption": "MAIN STAGE JUST DROPPED 🔥",
+      "likes": "2,431",
+      "comments": [
+        { "user": "fan_01", "text": "OMG YES" }
+      ]
+    }
+  ]
+}

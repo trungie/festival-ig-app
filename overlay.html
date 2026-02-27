@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ULTRA JUJU 2026 — Overlay</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── iPhone 15 Pro Frame ── */
+.iphone-frame {
+  position: relative;
+  width: 393px;
+  height: 852px;
+  border-radius: 55px;
+  background: #1a1a1a;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.1),
+    0 0 0 2px #0a0a0a,
+    0 0 0 4px #2a2a2a,
+    0 20px 60px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+
+/* Titanium edge highlights */
+.iphone-frame::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 57px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.15) 0%, transparent 50%, rgba(255,255,255,0.05) 100%);
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* ── Dynamic Island ── */
+.dynamic-island {
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 126px;
+  height: 37px;
+  background: #000;
+  border-radius: 20px;
+  z-index: 50;
+}
+
+/* ── Screen Area ── */
+.screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 55px;
+  overflow: hidden;
+  background: #fff;
+}
+
+/* ── IG App Container (scrollable) ── */
+.ig-app {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.ig-app::-webkit-scrollbar { display: none; }
+
+/* ── Status Bar ── */
+.status-bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 28px 0;
+  height: 54px;
+  background: #fff;
+}
+.status-bar .time {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.status-bar .icons {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.status-bar .icons svg { width: 16px; height: 16px; }
+
+/* ── IG Header ── */
+.ig-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background: #fff;
+}
+.ig-header .logo {
+  font-size: 22px;
+  font-weight: 700;
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.ig-header .header-icons {
+  display: flex;
+  gap: 20px;
+}
+.ig-header .header-icons svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ── Stories Bar ── */
+.stories-bar {
+  display: flex;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid #efefef;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.stories-bar::-webkit-scrollbar { display: none; }
+
+.story-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.story-ring {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  padding: 2px;
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+}
+.story-ring-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+.story-ring-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.story-name {
+  font-size: 11px;
+  color: #262626;
+  max-width: 64px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* ── Feed Post ── */
+.post {
+  border-bottom: 1px solid #efefef;
+  background: #fff;
+}
+.post-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+}
+.post-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.post-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #f0f0f0;
+}
+.post-username {
+  font-size: 13px;
+  font-weight: 600;
+  color: #262626;
+}
+.post-more svg { width: 16px; height: 16px; }
+
+.post-media {
+  width: 100%;
+  aspect-ratio: 1;
+  background: #f0f0f0;
+  position: relative;
+}
+.post-media img, .post-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.video-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.15);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.video-overlay.hidden { opacity: 0; pointer-events: none; }
+.video-overlay svg { width: 64px; height: 64px; fill: rgba(255,255,255,0.9); }
+
+.post-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px 6px;
+}
+.post-actions-left {
+  display: flex;
+  gap: 16px;
+}
+.post-actions svg {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+.post-actions svg:hover { opacity: 0.6; }
+
+.post-likes {
+  font-size: 13px;
+  font-weight: 600;
+  color: #262626;
+  padding: 0 14px 4px;
+}
+.post-caption {
+  font-size: 13px;
+  color: #262626;
+  padding: 0 14px 4px;
+  line-height: 1.4;
+}
+.post-caption .cap-user {
+  font-weight: 600;
+  margin-right: 4px;
+}
+.post-comments {
+  padding: 0 14px 8px;
+}
+.post-comment {
+  font-size: 13px;
+  color: #262626;
+  margin-bottom: 2px;
+  line-height: 1.4;
+}
+.post-comment .cmt-user {
+  font-weight: 600;
+  margin-right: 4px;
+}
+.post-time {
+  font-size: 10px;
+  color: #8e8e8e;
+  padding: 0 14px 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+}
+
+/* ── Bottom Nav ── */
+.ig-nav {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0 28px;
+  background: #fff;
+  border-top: 1px solid #efefef;
+  z-index: 30;
+}
+.ig-nav svg { width: 24px; height: 24px; }
+.ig-nav .nav-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid #262626;
+}
+
+/* ── Home Indicator ── */
+.home-indicator {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 134px;
+  height: 5px;
+  background: #000;
+  border-radius: 3px;
+  z-index: 60;
+}
+
+/* ── iOS Push Notification ── */
+.ios-notification {
+  position: absolute;
+  top: 0;
+  left: 8px;
+  right: 8px;
+  z-index: 80;
+  transform: translateY(-120%);
+  transition: transform 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+  pointer-events: none;
+}
+.ios-notification.visible {
+  transform: translateY(12px);
+  pointer-events: auto;
+}
+.notif-card {
+  background: rgba(250, 250, 250, 0.85);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-radius: 20px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08);
+}
+.notif-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.notif-icon img {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+}
+.notif-icon svg { width: 22px; height: 22px; fill: #fff; }
+.notif-content {
+  flex: 1;
+  min-width: 0;
+}
+.notif-app {
+  font-size: 13px;
+  font-weight: 600;
+  color: #262626;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.notif-text {
+  font-size: 14px;
+  color: #444;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+.notif-time {
+  font-size: 12px;
+  color: #8e8e8e;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+/* ── Feed Bottom Spacer ── */
+.feed-spacer {
+  height: 60px;
+}
+</style>
+</head>
+<body>
+
+<div class="iphone-frame">
+  <div class="dynamic-island"></div>
+
+  <!-- iOS Push Notification -->
+  <div class="ios-notification" id="notification">
+    <div class="notif-card">
+      <div class="notif-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </div>
+      <div class="notif-content">
+        <div class="notif-app">Instagram</div>
+        <div class="notif-text" id="notif-text">ultrajuju2026 posted a new photo</div>
+      </div>
+      <div class="notif-time">now</div>
+    </div>
+  </div>
+
+  <div class="screen">
+    <div class="ig-app" id="ig-app">
+
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <span class="time" id="clock">9:41</span>
+        <div class="icons">
+          <!-- Signal -->
+          <svg viewBox="0 0 17 12"><path d="M1 8.5h2a1 1 0 011 1v1a1 1 0 01-1 1H1a1 1 0 01-1-1v-1a1 1 0 011-1zm4.5-3h2a1 1 0 011 1v4a1 1 0 01-1 1h-2a1 1 0 01-1-1v-4a1 1 0 011-1zm4.5-3h2a1 1 0 011 1v7a1 1 0 01-1 1h-2a1 1 0 01-1-1v-7a1 1 0 011-1zm4.5-2.5h.5a1 1 0 011 1v9.5a1 1 0 01-1 1H14.5a1 1 0 01-1-1V1a1 1 0 011-1z" fill="#000"/></svg>
+          <!-- WiFi -->
+          <svg viewBox="0 0 16 12"><path d="M8 9.5a1.75 1.75 0 110 3.5 1.75 1.75 0 010-3.5zM8 6c1.8 0 3.43.73 4.6 1.9l-1.4 1.42A4.49 4.49 0 008 8.01c-1.24 0-2.37.5-3.18 1.32L3.4 7.91A6.48 6.48 0 018 6zm0-3.5c2.68 0 5.1 1.08 6.86 2.84L13.44 6.76A7.97 7.97 0 008 4.5c-2.12 0-4.07.83-5.5 2.18L1.14 5.34A10.46 10.46 0 018 2.5z" fill="#000"/></svg>
+          <!-- Battery -->
+          <svg viewBox="0 0 25 12"><rect x="0" y="0.5" width="22" height="11" rx="2" stroke="#000" stroke-width="1" fill="none"/><rect x="1.5" y="2" width="19" height="8" rx="1" fill="#000"/><path d="M23 4v4a2 2 0 000-4z" fill="#000" opacity="0.4"/></svg>
+        </div>
+      </div>
+
+      <!-- IG Header -->
+      <div class="ig-header">
+        <div class="logo">ULTRA JUJU 2026</div>
+        <div class="header-icons">
+          <!-- Heart -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          <!-- Messenger -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        </div>
+      </div>
+
+      <!-- Stories Bar -->
+      <div class="stories-bar" id="stories-bar">
+        <div class="story-item">
+          <div class="story-ring">
+            <div class="story-ring-inner">
+              <img src="./assets/avatars/juju.png" alt="">
+            </div>
+          </div>
+          <span class="story-name">ultrajuju</span>
+        </div>
+        <div class="story-item">
+          <div class="story-ring">
+            <div class="story-ring-inner">
+              <img src="./assets/avatars/juju.png" alt="">
+            </div>
+          </div>
+          <span class="story-name">mainstage</span>
+        </div>
+        <div class="story-item">
+          <div class="story-ring">
+            <div class="story-ring-inner">
+              <img src="./assets/avatars/juju.png" alt="">
+            </div>
+          </div>
+          <span class="story-name">backstage</span>
+        </div>
+        <div class="story-item">
+          <div class="story-ring">
+            <div class="story-ring-inner">
+              <img src="./assets/avatars/juju.png" alt="">
+            </div>
+          </div>
+          <span class="story-name">vibes</span>
+        </div>
+      </div>
+
+      <!-- Feed -->
+      <div id="feed"></div>
+      <div class="feed-spacer"></div>
+
+      <!-- Bottom Nav -->
+      <div class="ig-nav">
+        <!-- Home (filled) -->
+        <svg viewBox="0 0 24 24" fill="#262626"><path d="M9.005 16.545a2.997 2.997 0 012.997-2.997h0A2.997 2.997 0 0115 16.545V22h7V11.543L12 2 2 11.543V22h7.005z"/></svg>
+        <!-- Search -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <!-- Reels -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M10 8l6 4-6 4V8z" fill="#262626"/></svg>
+        <!-- Shop -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>
+        <!-- Profile -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="home-indicator"></div>
+</div>
+
+<script>
+// ── Render Posts ──
+function renderPost(post, index) {
+  const isVideo = post.type === 'video';
+  const commentsHTML = (post.comments || []).map(c =>
+    `<div class="post-comment"><span class="cmt-user">${esc(c.user)}</span>${esc(c.text)}</div>`
+  ).join('');
+
+  let mediaHTML;
+  if (isVideo) {
+    mediaHTML = `
+      <video src="${esc(post.media)}" poster="${esc(post.media.replace(/\.[^.]+$/, '.jpg'))}"
+             preload="metadata" playsinline muted loop></video>
+      <div class="video-overlay" data-post-id="${esc(post.id)}">
+        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </div>`;
+  } else {
+    mediaHTML = `<img src="${esc(post.media)}" alt="" loading="lazy">`;
+  }
+
+  return `
+    <div class="post" id="post-${esc(post.id)}" data-index="${index}">
+      <div class="post-header">
+        <div class="post-header-left">
+          <img class="post-avatar" src="${esc(post.avatar)}" alt="">
+          <span class="post-username">${esc(post.username)}</span>
+        </div>
+        <div class="post-more">
+          <svg viewBox="0 0 24 24" fill="#262626"><circle cx="6" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18" cy="12" r="1.5"/></svg>
+        </div>
+      </div>
+      <div class="post-media">${mediaHTML}</div>
+      <div class="post-actions">
+        <div class="post-actions-left">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        </div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+      </div>
+      <div class="post-likes">${esc(post.likes)} likes</div>
+      <div class="post-caption"><span class="cap-user">${esc(post.username)}</span>${esc(post.caption)}</div>
+      <div class="post-comments">${commentsHTML}</div>
+      <div class="post-time">Just now</div>
+    </div>`;
+}
+
+function esc(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderFeed(activePosts) {
+  const feed = document.getElementById('feed');
+  feed.innerHTML = activePosts.map((p, i) => renderPost(p, i)).join('');
+}
+
+function scrollToPost(index) {
+  const el = document.querySelector(`.post[data-index="${index}"]`);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+// ── Notification ──
+function showNotification(text) {
+  const el = document.getElementById('notification');
+  document.getElementById('notif-text').textContent = text || 'ultrajuju2026 posted a new photo';
+  el.classList.add('visible');
+}
+
+function hideNotification() {
+  document.getElementById('notification').classList.remove('visible');
+}
+
+// ── Clock ──
+function updateClock() {
+  const now = new Date();
+  const h = now.getHours();
+  const m = now.getMinutes().toString().padStart(2, '0');
+  document.getElementById('clock').textContent = `${h}:${m}`;
+}
+updateClock();
+setInterval(updateClock, 30000);
+
+// ── WebSocket ──
+let ws;
+function connect() {
+  const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  ws = new WebSocket(`${proto}//${location.host}`);
+
+  ws.onopen = () => {
+    ws.send(JSON.stringify({ type: 'register', role: 'overlay' }));
+  };
+
+  ws.onmessage = (e) => {
+    let msg;
+    try { msg = JSON.parse(e.data); } catch { return; }
+
+    switch (msg.type) {
+      case 'state':
+        renderFeed(msg.posts.active || []);
+        if (msg.notificationActive) {
+          showNotification(msg.notificationText);
+        } else {
+          hideNotification();
+        }
+        // Scroll to current post after render
+        setTimeout(() => scrollToPost(msg.currentIndex), 100);
+        break;
+
+      case 'scroll':
+        if (!msg.notificationActive) hideNotification();
+        scrollToPost(msg.currentIndex);
+        break;
+
+      case 'notification':
+        if (msg.active) {
+          showNotification(msg.text);
+        } else {
+          hideNotification();
+        }
+        break;
+
+      case 'reload':
+        location.reload();
+        break;
+    }
+  };
+
+  ws.onclose = () => setTimeout(connect, 2000);
+  ws.onerror = () => ws.close();
+}
+connect();
+</script>
+</body>
+</html>

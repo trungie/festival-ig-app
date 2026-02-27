@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> Mr Abdullah WebDev</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #fafafa;
+      color: #262626;
+    }
+
+    .story-item::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      border-radius: 50%;
+      z-index: -1;
+    }
+
+    .post-like:hover .like-icon {
+      transform: scale(1.2);
+    }
+
+    .nav-active::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: #262626;
+    }
+
+    /* Custom scrollbar */
+    .stories-container::-webkit-scrollbar {
+      height: 3px;
+    }
+
+    .stories-container::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    .stories-container::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 3px;
+    }
+
+    /* Animation for floating action button */
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-5px);
+      }
+
+      100% {
+        transform: translateY(0px);
+      }
+    }
+
+    .floating-btn {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    /* Dark mode toggle */
+    .dark-mode-toggle {
+      transition: all 0.3s ease;
+    }
+
+    .dark-mode-toggle::before {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: white;
+      transition: transform 0.3s ease;
+    }
+
+    #darkMode:checked+.dark-mode-toggle::before {
+      transform: translateX(20px);
+    }
+
+    /* Dark mode styles */
+    .dark body {
+      background-color: #121212;
+      color: #f5f5f5;
+    }
+
+    .dark .bg-white {
+      background-color: #1e1e1e;
+    }
+
+    .dark .bg-gray-100 {
+      background-color: #2d2d2d;
+    }
+
+    .dark .text-gray-500 {
+      color: #a8a8a8;
+    }
+
+    .dark .border-gray-200 {
+      border-color: #333;
+    }
+
+    .dark .nav-active::after {
+      background-color: #f5f5f5;
+    }
+  </style>
+</head>
+
+<body class="dark:bg-gray-900">
+  <!-- Main Layout -->
+  <div class="max-w-screen-sm mx-auto bg-white dark:bg-gray-900 min-h-screen">
+    <!-- Header -->
+    <header class="sticky top-0 z-10 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 py-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <i class="fas fa-camera text-2xl mr-2 dark:text-white"></i>
+          <h1 class="text-xl font-bold dark:text-white">Mr Abdullah WebDev</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <button class="dark:text-white">
+            <i class="far fa-heart text-xl"></i>
+          </button>
+          <button class="dark:text-white">
+            <i class="fab fa-facebook-messenger text-xl"></i>
+          </button>
+          <div class="flex items-center">
+            <input type="checkbox" id="darkMode" class="hidden">
+            <label for="darkMode" class="dark-mode-toggle relative w-12 h-6 bg-gray-300 dark:bg-gray-600 rounded-full cursor-pointer"></label>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Stories -->
+    <div class="stories-container bg-white dark:bg-gray-900 px-4 py-3 border-b border-gray-200 dark:border-gray-800 overflow-x-auto whitespace-nowrap">
+      <div class="inline-flex space-x-4">
+        <!-- Your Story -->
+        <div class="flex flex-col items-center space-y-1">
+          <div class="relative w-16 h-16 rounded-full bg-gradient-to-tr from-yellow-400 to-pink-600 p-0.5">
+            <div class="bg-white dark:bg-gray-900 rounded-full p-0.5">
+              <div class="w-full h-full rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                <i class="fas fa-plus text-gray-500 dark:text-gray-400"></i>
+              </div>
+            </div>
+          </div>
+          <span class="text-xs dark:text-white">Your Story</span>
+        </div>
+
+        <!-- Other Stories -->
+        <div class="flex flex-col items-center space-y-1">
+          <div class="story-item relative w-16 h-16 rounded-full p-0.5">
+            <div class="bg-white dark:bg-gray-900 rounded-full p-0.5">
+              <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User" class="w-full h-full rounded-full object-cover">
+            </div>
+          </div>
+          <span class="text-xs dark:text-white">sarah_j</span>
+        </div>
+
+        <div class="flex flex-col items-center space-y-1">
+          <div class="story-item relative w-16 h-16 rounded-full p-0.5">
+            <div class="bg-white dark:bg-gray-900 rounded-full p-0.5">
+              <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-full h-full rounded-full object-cover">
+            </div>
+          </div>
+          <span class="text-xs dark:text-white">mike_t</span>
+        </div>
+
+        <div class="flex flex-col items-center space-y-1">
+          <div class="story-item relative w-16 h-16 rounded-full p-0.5">
+            <div class="bg-white dark:bg-gray-900 rounded-full p-0.5">
+              <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="User" class="w-full h-full rounded-full object-cover">
+            </div>
+          </div>
+          <span class="text-xs dark:text-white">lisa_m</span>
+        </div>
+
+        <div class="flex flex-col items-center space-y-1">
+          <div class="story-item relative w-16 h-16 rounded-full p-0.5">
+            <div class="bg-white dark:bg-gray-900 rounded-full p-0.5">
+              <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="User" class="w-full h-full rounded-full object-cover">
+            </div>
+          </div>
+          <span class="text-xs dark:text-white">david_k</span>
+        </div>
+
+        <div class="flex flex-col items-center space-y-1">
+          <div class="story-item relative w-16 h-16 rounded-full p-0.5">
+            <div class="bg-white dark:bg-gray-900 rounded-full p-0.5">
+              <img src="https://randomuser.me/api/portraits/women/90.jpg" alt="User" class="w-full h-full rounded-full object-cover">
+            </div>
+          </div>
+          <span class="text-xs dark:text-white">emma_s</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Posts -->
+    <div class="pb-16">
+      <!-- Post 1 -->
+      <div class="border-b border-gray-200 dark:border-gray-800 mb-4">
+        <!-- Post Header -->
+        <div class="flex items-center justify-between px-4 py-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 to-pink-600 p-0.5">
+              <div class="bg-white dark:bg-gray-900 rounded-full p-0.5">
+                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User" class="w-full h-full rounded-full object-cover">
+              </div>
+            </div>
+            <span class="font-semibold text-sm dark:text-white">sarah_j</span>
+          </div>
+          <button class="text-gray-500 dark:text-gray-400">
+            <i class="fas fa-ellipsis-h"></i>
+          </button>
+        </div>
+
+        <!-- Post Image -->
+        <div class="aspect-square bg-gray-100 dark:bg-gray-800">
+          <img src="https://images.unsplash.com/photo-1493612276216-2dd6f9e21e96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Post" class="w-full h-full object-cover">
+        </div>
+
+        <!-- Post Actions -->
+        <div class="px-4 py-3">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center space-x-4">
+              <button class="post-like dark:text-white">
+                <i class="like-icon far fa-heart text-2xl transition-transform"></i>
+              </button>
+              <button class="dark:text-white">
+                <i class="far fa-comment text-2xl"></i>
+              </button>
+              <button class="dark:text-white">
+                <i class="far fa-paper-plane text-2xl"></i>
+              </button>
+            </div>
+            <button class="dark:text-white">
+              <i class="far fa-bookmark text-2xl"></i>
+            </button>
+          </div>
+
+          <!-- Likes -->
+          <p class="font-semibold text-sm mb-1 dark:text-white">1,243 likes</p>
+
+          <!-- Caption -->
+          <p class="text-sm mb-1 dark:text-white">
+            <span class="font-semibold mr-1">sarah_j</span>
+            Beautiful sunset at the beach today! 🌅 #sunset #beach #vacation
+          </p>
+
+          <!-- Comments -->
+          <button class="text-gray-500 text-sm mb-1 dark:text-gray-400">View all 84 comments</button>
+          <div class="flex items-start space-x-2 mb-1">
+            <span class="font-semibold text-sm dark:text-white">mike_t</span>
+            <p class="text-sm flex-1 dark:text-white">Looks amazing! Where is this?</p>
+          </div>
+          <div class="flex items-start space-x-2">
+            <span class="font-semibold text-sm dark:text-white">lisa_m</span>
+            <p class="text-sm flex-1 dark:text-white">😍😍😍</p>
+          </div>
+
+          <!-- Time -->
+          <p class="text-gray-500 text-xs mt-2 dark:text-gray-400">2 HOURS AGO</p>
+        </div>
+      </div>
+
+      <!-- Post 2 -->
+      <div class="border-b border-gray-200 dark:border-gray-800 mb-4">
+        <!-- Post Header -->
+        <div class="flex items-center justify-between px-4 py-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 to-pink-600 p-0.5">
+              <div class="bg-white dark:bg-gray-900 rounded-full p-0.5">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-full h-full rounded-full object-cover">
+              </div>
+            </div>
+            <span class="font-semibold text-sm dark:text-white">mike_t</span>
+          </div>
+          <button class="text-gray-500 dark:text-gray-400">
+            <i class="fas fa-ellipsis-h"></i>
+          </button>
+        </div>
+
+        <!-- Post Image -->
+        <div class="aspect-square bg-gray-100 dark:bg-gray-800">
+          <img src="https://images.unsplash.com/photo-1547153760-18fc86324498?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Post" class="w-full h-full object-cover">
+        </div>
+
+        <!-- Post Actions -->
+        <div class="px-4 py-3">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center space-x-4">
+              <button class="post-like dark:text-white">
+                <i class="like-icon far fa-heart text-2xl transition-transform"></i>
+              </button>
+              <button class="dark:text-white">
+                <i class="far fa-comment text-2xl"></i>
+              </button>
+              <button class="dark:text-white">
+                <i class="far fa-paper-plane text-2xl"></i>
+              </button>
+            </div>
+            <button class="dark:text-white">
+              <i class="far fa-bookmark text-2xl"></i>
+            </button>
+          </div>
+
+          <!-- Likes -->
+          <p class="font-semibold text-sm mb-1 dark:text-white">892 likes</p>
+
+          <!-- Caption -->
+          <p class="text-sm mb-1 dark:text-white">
+            <span class="font-semibold mr-1">mike_t</span>
+            Homemade pasta for dinner tonight! 🍝 #foodie #homecooking
+          </p>
+
+          <!-- Comments -->
+          <button class="text-gray-500 text-sm mb-1 dark:text-gray-400">View all 42 comments</button>
+          <div class="flex items-start space-x-2 mb-1">
+            <span class="font-semibold text-sm dark:text-white">david_k</span>
+            <p class="text-sm flex-1 dark:text-white">Recipe please!</p>
+          </div>
+          <div class="flex items-start space-x-2">
+            <span class="font-semibold text-sm dark:text-white">sarah_j</span>
+            <p class="text-sm flex-1 dark:text-white">Looks delicious! 😋</p>
+          </div>
+
+          <!-- Time -->
+          <p class="text-gray-500 text-xs mt-2 dark:text-gray-400">5 HOURS AGO</p>
+        </div>
+      </div>
+
+      <!-- Post 3 -->
+      <div class="border-b border-gray-200 dark:border-gray-800 mb-4">
+        <!-- Post Header -->
+        <div class="flex items-center justify-between px-4 py-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 to-pink-600 p-0.5">
+              <div class="bg-white dark:bg-gray-900 rounded-full p-0.5">
+                <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="User" class="w-full h-full rounded-full object-cover">
+              </div>
+            </div>
+            <span class="font-semibold text-sm dark:text-white">lisa_m</span>
+          </div>
+          <button class="text-gray-500 dark:text-gray-400">
+            <i class="fas fa-ellipsis-h"></i>
+          </button>
+        </div>
+
+        <!-- Post Image -->
+        <div class="aspect-square bg-gray-100 dark:bg-gray-800">
+          <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1169&q=80" alt="Post" class="w-full h-full object-cover">
+        </div>
+
+        <!-- Post Actions -->
+        <div class="px-4 py-3">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center space-x-4">
+              <button class="post-like dark:text-white">
+                <i class="like-icon far fa-heart text-2xl transition-transform"></i>
+              </button>
+              <button class="dark:text-white">
+                <i class="far fa-comment text-2xl"></i>
+              </button>
+              <button class="dark:text-white">
+                <i class="far fa-paper-plane text-2xl"></i>
+              </button>
+            </div>
+            <button class="dark:text-white">
+              <i class="far fa-bookmark text-2xl"></i>
+            </button>
+          </div>
+
+          <!-- Likes -->
+          <p class="font-semibold text-sm mb-1 dark:text-white">1,532 likes</p>
+
+          <!-- Caption -->
+          <p class="text-sm mb-1 dark:text-white">
+            <span class="font-semibold mr-1">lisa_m</span>
+            New phone who dis? 📱 #tech #gadgets
+          </p>
+
+          <!-- Comments -->
+          <button class="text-gray-500 text-sm mb-1 dark:text-gray-400">View all 67 comments</button>
+          <div class="flex items-start space-x-2 mb-1">
+            <span class="font-semibold text-sm dark:text-white">emma_s</span>
+            <p class="text-sm flex-1 dark:text-white">How's the camera?</p>
+          </div>
+          <div class="flex items-start space-x-2">
+            <span class="font-semibold text-sm dark:text-white">mike_t</span>
+            <p class="text-sm flex-1 dark:text-white">Nice upgrade!</p>
+          </div>
+
+          <!-- Time -->
+          <p class="text-gray-500 text-xs mt-2 dark:text-gray-400">1 DAY AGO</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex items-center justify-around py-3 max-w-screen-sm mx-auto">
+      <a href="#" class="nav-active relative dark:text-white">
+        <i class="fas fa-home text-xl"></i>
+      </a>
+      <a href="#" class="text-gray-500 dark:text-gray-400">
+        <i class="fas fa-search text-xl"></i>
+      </a>
+      <a href="#" class="bg-gradient-to-r from-yellow-400 to-pink-600 w-12 h-12 rounded-full flex items-center justify-center text-white floating-btn">
+        <i class="fas fa-plus text-xl"></i>
+      </a>
+      <a href="#" class="text-gray-500 dark:text-gray-400">
+        <i class="far fa-heart text-xl"></i>
+      </a>
+      <a href="#" class="text-gray-500 dark:text-gray-400">
+        <i class="far fa-user text-xl"></i>
+      </a>
+    </nav>
+  </div>
+
+  <script>
+    // Toggle dark mode
+    document.getElementById('darkMode').addEventListener('change', function() {
+      document.documentElement.classList.toggle('dark', this.checked);
+      localStorage.setItem('darkMode', this.checked);
+    });
+    // Check for saved dark mode preference
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.getElementById('darkMode').checked = true;
+      document.documentElement.classList.add('dark');
+    }
+    // Like button animation
+    document.addEventListener('DOMContentLoaded', function() {
+      const likeButtons = document.querySelectorAll('.post-like');
+      likeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const icon = this.querySelector('.like-icon');
+          if (icon.classList.contains('far')) {
+            icon.classList.remove('far');
+            icon.classList.add('fas', 'text-red-500');
+            icon.style.transform = 'scale(1.5)';
+            setTimeout(() => {
+              icon.style.transform = 'scale(1)';
+            }, 200);
+          } else {
+            icon.classList.remove('fas', 'text-red-500');
+            icon.classList.add('far');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>
