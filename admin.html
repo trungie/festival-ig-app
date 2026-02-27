@@ -149,6 +149,8 @@ h1 {
 }
 .post-badge.video { background: #7c3aed22; color: #a78bfa; }
 .post-badge.active-idx { background: #3b82f622; color: #60a5fa; }
+.scale-btn { min-width: 56px; text-align: center; padding: 8px 12px; }
+.scale-btn.active-scale { background: #3b82f6; color: #fff; }
 
 /* State display */
 .state-info {
@@ -230,6 +232,13 @@ h1 {
   </div>
   <div class="notif-row">
     <input class="notif-input" id="notif-input" type="text" placeholder="Custom notification text (optional)">
+  </div>
+  <div class="notif-row" style="gap:6px; margin-top:4px;">
+    <span style="color:#888;font-size:13px;align-self:center;">Scale:</span>
+    <button class="btn btn-secondary scale-btn active-scale" data-scale="1">1x</button>
+    <button class="btn btn-secondary scale-btn" data-scale="1.25">1.25x</button>
+    <button class="btn btn-secondary scale-btn" data-scale="1.5">1.5x</button>
+    <button class="btn btn-secondary scale-btn" data-scale="2">2x</button>
   </div>
 </div>
 
@@ -316,6 +325,16 @@ function updateUI() {
 function send(msg) {
   if (ws && ws.readyState === WebSocket.OPEN) {
     ws.send(JSON.stringify(msg));
+  } else {
+    // Fallback: REST API
+    fetch('/api/command', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(msg)
+    })
+      .then(r => r.json())
+      .then(data => { if (data.state) { state = data.state; updateUI(); } })
+      .catch(e => console.log('[Admin] API error:', e));
   }
 }
 
@@ -332,28 +351,50 @@ document.getElementById('btn-notify').onclick = () => {
   send({ type: 'notify', text: text || undefined });
 };
 
+// Scale buttons
+document.querySelectorAll('.scale-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('active-scale'));
+    btn.classList.add('active-scale');
+    send({ type: 'notif-scale', scale: parseFloat(btn.dataset.scale) });
+  };
+});
+
 // Enter key in notification input
 document.getElementById('notif-input').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') document.getElementById('btn-notify').click();
 });
 
+// ── Initial data fetch ──
+fetch('/posts.json')
+  .then(r => r.json())
+  .then(data => {
+    state.posts = data;
+    updateUI();
+  })
+  .catch(() => {});
+
 // ── WebSocket ──
 let ws;
 function connect() {
   const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
-  ws = new WebSocket(`${proto}//${location.host}`);
+  const url = `${proto}//${location.host}`;
+  console.log('[Admin] Connecting to', url);
+  ws = new WebSocket(url);
 
   ws.onopen = () => {
+    console.log('[Admin] WebSocket connected');
     document.getElementById('dot-ws').className = 'dot on';
     ws.send(JSON.stringify({ type: 'register', role: 'admin' }));
   };
 
-  ws.onclose = () => {
+  ws.onclose = (e) => {
+    console.log('[Admin] WebSocket closed:', e.code, e.reason);
     document.getElementById('dot-ws').className = 'dot off';
     setTimeout(connect, 2000);
   };
 
-  ws.onerror = () => ws.close();
+  ws.onerror = (e) => { console.log('[Admin] WebSocket error:', e); ws.close(); };
 
   ws.onmessage = (e) => {
     let msg;
@@ -378,6 +419,16 @@ function connect() {
 }
 connect();
 updateUI();
+
+// Poll state as fallback when WS is down
+setInterval(() => {
+  if (!ws || ws.readyState !== WebSocket.OPEN) {
+    fetch('/api/state')
+      .then(r => r.json())
+      .then(data => { state = data; updateUI(); })
+      .catch(() => {});
+  }
+}, 2000);
 </script>
 </body>
 </html>

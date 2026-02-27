@@ -12,6 +12,7 @@ let posts = { active: [], hidden: [] };
 let currentIndex = 0;
 let notificationActive = false;
 let notificationText = "";
+let notifScale = 1;
 
 function loadPosts() {
   try {
@@ -33,6 +34,7 @@ function getState() {
     currentIndex,
     notificationActive,
     notificationText,
+    notifScale,
     connectedClients: {
       overlay: clients.filter((c) => c.role === "overlay").length,
       control: clients.filter((c) => c.role === "control").length,
@@ -230,6 +232,11 @@ function handleCommand(client, raw) {
       broadcast({ type: "notification", active: false, text: "" });
       break;
 
+    case "notif-scale":
+      notifScale = msg.scale || 1;
+      broadcast({ type: "notif-scale", scale: notifScale });
+      break;
+
     case "reload":
       broadcastTo(["overlay", "control"], { type: "reload" });
       break;
@@ -260,6 +267,37 @@ const server = http.createServer((req, res) => {
   let urlPath = req.url.split("?")[0];
   if (urlPath === "/") urlPath = "/overlay.html";
 
+  const CORS = {
+    "Access-Control-Allow-Origin": "*",
+    "Cache-Control": "no-cache",
+  };
+
+  // ── REST API for admin commands (fallback when WS unavailable) ──
+  if (urlPath === "/api/command" && req.method === "POST") {
+    let body = "";
+    req.on("data", (chunk) => (body += chunk));
+    req.on("end", () => {
+      try {
+        const msg = JSON.parse(body);
+        // Reuse the same command handler
+        const fakeClient = { socket: null, role: "admin" };
+        handleCommand(fakeClient, body);
+        res.writeHead(200, { "Content-Type": "application/json", ...CORS });
+        res.end(JSON.stringify({ ok: true, state: getState() }));
+      } catch (e) {
+        res.writeHead(400, { "Content-Type": "application/json", ...CORS });
+        res.end(JSON.stringify({ ok: false, error: e.message }));
+      }
+    });
+    return;
+  }
+
+  if (urlPath === "/api/state" && req.method === "GET") {
+    res.writeHead(200, { "Content-Type": "application/json", ...CORS });
+    res.end(JSON.stringify(getState()));
+    return;
+  }
+
   const filePath = path.join(ROOT, urlPath);
 
   // Security: prevent directory traversal
@@ -280,8 +318,7 @@ const server = http.createServer((req, res) => {
     }
     res.writeHead(200, {
       "Content-Type": mime,
-      "Access-Control-Allow-Origin": "*",
-      "Cache-Control": "no-cache",
+      ...CORS,
     });
     res.end(data);
   });

@@ -6,25 +6,121 @@
       "avatar": "./assets/avatars/juju.png",
       "media": "./assets/posts/welcome.jpg",
       "type": "image",
-      "caption": "Welcome to ULTRA JUJU 2026! 🎪🔥",
+      "caption": "Welcome to ULTRA JUJU 2026! \ud83c\udfaa\ud83d\udd25",
       "likes": "4,892",
       "comments": [
         { "user": "festival_fan", "text": "LET'S GOOO" },
-        { "user": "juju_crew", "text": "🔥🔥🔥" }
+        { "user": "juju_crew", "text": "\ud83d\udd25\ud83d\udd25\ud83d\udd25" }
+      ]
+    },
+    {
+      "id": "9",
+      "username": "dj_nova",
+      "avatar": "./assets/avatars/dj_nova.png",
+      "media": "./assets/posts/live-set.mp4",
+      "type": "video",
+      "caption": "LIVE FROM THE MAIN STAGE \ud83d\udfe3\ud83d\udd25 this drop is INSANE",
+      "likes": "15,220",
+      "comments": [
+        { "user": "ultrajuju2026", "text": "THE BASS \ud83d\udca5\ud83d\udca5\ud83d\udca5" },
+        { "user": "festival_fan", "text": "i felt that in my chest omg" }
+      ]
+    },
+    {
+      "id": "2",
+      "username": "dj_nova",
+      "avatar": "./assets/avatars/dj_nova.png",
+      "media": "./assets/posts/dj-set.jpg",
+      "type": "image",
+      "caption": "About to blow the roof off Main Stage \ud83c\udfa7\ud83d\udca5 #ULTRAJUJU",
+      "likes": "7,231",
+      "comments": [
+        { "user": "ultrajuju2026", "text": "GET READYYYY" },
+        { "user": "festival_fan", "text": "front row or nothing \ud83d\ude4c" },
+        { "user": "juju_crew", "text": "this set is gonna be LEGENDARY" }
+      ]
+    },
+    {
+      "id": "3",
+      "username": "festival_fan",
+      "avatar": "./assets/avatars/festival_fan.png",
+      "media": "./assets/posts/crowd.jpg",
+      "type": "image",
+      "caption": "THE ENERGY IS UNREAL RN \ud83d\ude2d\ud83d\ude2d\ud83d\ude2d who else is at the front??",
+      "likes": "1,847",
+      "comments": [
+        { "user": "juju_crew", "text": "MEEEE" },
+        { "user": "stagehand_mike", "text": "y'all are WILD tonight \ud83d\ude02" }
       ]
     }
   ],
   "hidden": [
     {
-      "id": "2",
+      "id": "4",
       "username": "ultrajuju2026",
       "avatar": "./assets/avatars/juju.png",
-      "media": "./assets/posts/stage-reveal.mp4",
-      "type": "video",
-      "caption": "MAIN STAGE JUST DROPPED 🔥",
-      "likes": "2,431",
+      "media": "./assets/posts/sunset.jpg",
+      "type": "image",
+      "caption": "Golden hour hits different at JUJU \ud83c\udf05\u2728",
+      "likes": "9,104",
       "comments": [
-        { "user": "fan_01", "text": "OMG YES" }
+        { "user": "dj_nova", "text": "magical vibes only" },
+        { "user": "festival_fan", "text": "im literally crying this is so beautiful" },
+        { "user": "foodie_jules", "text": "the sky said \ud83e\udde1\ud83d\udc9b" }
+      ]
+    },
+    {
+      "id": "5",
+      "username": "stagehand_mike",
+      "avatar": "./assets/avatars/stagehand.png",
+      "media": "./assets/posts/backstage.jpg",
+      "type": "image",
+      "caption": "Backstage pass = best pass. Secret set loading... \ud83e\udd2b",
+      "likes": "3,412",
+      "comments": [
+        { "user": "ultrajuju2026", "text": "SHHH don't spoil it \ud83d\ude09" },
+        { "user": "festival_fan", "text": "WAIT WHAT SECRET SET??" }
+      ]
+    },
+    {
+      "id": "6",
+      "username": "foodie_jules",
+      "avatar": "./assets/avatars/foodie.png",
+      "media": "./assets/posts/food-truck.jpg",
+      "type": "image",
+      "caption": "Festival food tier list: 1. Elote truck 2. Everything else \ud83c\udf3d\ud83d\udd25",
+      "likes": "2,658",
+      "comments": [
+        { "user": "festival_fan", "text": "the birria tacos tho \ud83e\udd24" },
+        { "user": "juju_crew", "text": "bro i waited 45 min and it was WORTH IT" },
+        { "user": "stagehand_mike", "text": "crew gets to skip the line \ud83d\ude0e" }
+      ]
+    },
+    {
+      "id": "7",
+      "username": "dj_nova",
+      "avatar": "./assets/avatars/dj_nova.png",
+      "media": "./assets/posts/fireworks.jpg",
+      "type": "image",
+      "caption": "Closing set + fireworks = absolute CHILLS \ud83c\udf86\ud83d\udc9c",
+      "likes": "12,903",
+      "comments": [
+        { "user": "ultrajuju2026", "text": "thank you for an INCREDIBLE night" },
+        { "user": "festival_fan", "text": "i will never recover from this" },
+        { "user": "foodie_jules", "text": "best night of my life no exaggeration" }
+      ]
+    },
+    {
+      "id": "8",
+      "username": "juju_crew",
+      "avatar": "./assets/avatars/juju_crew.png",
+      "media": "./assets/posts/merch.jpg",
+      "type": "image",
+      "caption": "MERCH DROP \ud83d\udea8 limited edition hoodies going FAST. Tent B, you snooze you lose",
+      "likes": "5,320",
+      "comments": [
+        { "user": "festival_fan", "text": "RUNNING there rn" },
+        { "user": "stagehand_mike", "text": "already copped two \ud83d\ude4f" }
       ]
     }
   ]
