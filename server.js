@@ -38,6 +38,7 @@ function getState() {
     connectedClients: {
       overlay: clients.filter((c) => c.role === "overlay").length,
       control: clients.filter((c) => c.role === "control").length,
+      controls: clients.filter((c) => c.role === "controls").length,
       admin: clients.filter((c) => c.role === "admin").length,
     },
   };
@@ -238,7 +239,7 @@ function handleCommand(client, raw) {
       break;
 
     case "reload":
-      broadcastTo(["overlay", "control"], { type: "reload" });
+      broadcastTo(["overlay", "control", "controls"], { type: "reload" });
       break;
 
     case "sync":
@@ -266,6 +267,7 @@ const MIME_TYPES = {
 const server = http.createServer((req, res) => {
   let urlPath = req.url.split("?")[0];
   if (urlPath === "/") urlPath = "/overlay.html";
+  if (urlPath === "/controls") urlPath = "/controls.html";
 
   const CORS = {
     "Access-Control-Allow-Origin": "*",
@@ -401,11 +403,21 @@ for (const file of fs.readdirSync(ROOT)) {
       clearTimeout(reloadDebounce);
       reloadDebounce = setTimeout(() => {
         console.log(`${file} changed, sending reload...`);
-        broadcastTo(["overlay", "control"], { type: "reload" });
+        broadcastTo(["overlay", "control", "controls"], { type: "reload" });
       }, 300);
     });
   }
 }
+
+// --- Heartbeat pings (keep WS alive through NAT/mobile) ---
+setInterval(() => {
+  const ping = Buffer.alloc(2);
+  ping[0] = 0x89; // FIN + ping opcode
+  ping[1] = 0;    // no payload
+  for (const c of clients) {
+    try { c.socket.write(ping); } catch (e) {}
+  }
+}, 30000);
 
 // --- Start ---
 server.listen(PORT, HOST, () => {
@@ -413,4 +425,5 @@ server.listen(PORT, HOST, () => {
   console.log(`  Overlay: http://localhost:${PORT}/overlay.html`);
   console.log(`  Admin:   http://localhost:${PORT}/admin.html`);
   console.log(`  Control: http://localhost:${PORT}/control.html`);
+  console.log(`  Controls: http://localhost:${PORT}/controls`);
 });
