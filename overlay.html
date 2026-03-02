@@ -16,7 +16,8 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  overflow: hidden;
+  overflow: visible;
+  padding: 20px;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -527,7 +528,7 @@ function renderPost(post, index) {
   if (isVideo) {
     mediaHTML = `
       <video src="${esc(post.media)}" poster="${esc(post.media.replace(/\.[^.]+$/, '.jpg'))}"
-             preload="auto" playsinline muted loop autoplay></video>`;
+             preload="auto" playsinline muted autoplay loop></video>`;
   } else {
     mediaHTML = `<img src="${esc(post.media)}" alt="" loading="lazy">`;
   }
@@ -564,7 +565,11 @@ function esc(str) {
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+let lastFeedJSON = '';
 function renderFeed(activePosts) {
+  const json = JSON.stringify(activePosts);
+  if (json === lastFeedJSON) return; // skip if nothing changed
+  lastFeedJSON = json;
   const feed = document.getElementById('feed');
   feed.innerHTML = activePosts.map((p, i) => renderPost(p, i)).join('');
 }
@@ -654,13 +659,28 @@ function connect() {
           hideNotification();
         }
         if (msg.notifScale) applyNotifScale(msg.notifScale);
-        // Scroll to current post after render
-        setTimeout(() => scrollToPost(msg.currentIndex), 100);
+        // Scroll to current post after render (index 0 shows header)
+        setTimeout(() => {
+          if (msg.currentIndex === 0) {
+            document.getElementById('ig-app').scrollTo({ top: 0, behavior: 'smooth' });
+          } else {
+            scrollToPost(msg.currentIndex);
+          }
+        }, 100);
         break;
 
       case 'scroll':
         if (!msg.notificationActive) hideNotification();
-        scrollToPost(msg.currentIndex);
+        if (msg.currentIndex === 0) {
+          document.getElementById('ig-app').scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          scrollToPost(msg.currentIndex);
+        }
+        break;
+
+      case 'scroll-top':
+        if (!msg.notificationActive) hideNotification();
+        document.getElementById('ig-app').scrollTo({ top: 0, behavior: 'smooth' });
         break;
 
       case 'notification':
@@ -697,7 +717,13 @@ setInterval(() => {
         renderFeed(msg.posts.active || []);
         if (msg.currentIndex !== lastIndex) {
           lastIndex = msg.currentIndex;
-          setTimeout(() => scrollToPost(msg.currentIndex), 100);
+          setTimeout(() => {
+            if (msg.currentIndex === 0) {
+              document.getElementById('ig-app').scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+              scrollToPost(msg.currentIndex);
+            }
+          }, 100);
         }
         if (msg.notificationActive && !lastNotif) {
           showNotification(msg.notificationText);

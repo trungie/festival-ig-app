@@ -216,6 +216,17 @@ function handleCommand(client, raw) {
       }
       break;
 
+    case "top":
+      currentIndex = 0;
+      notificationActive = false;
+      notificationText = "";
+      broadcast({
+        type: "scroll-top",
+        currentIndex: 0,
+        notificationActive: false,
+      });
+      break;
+
     case "notify":
       notificationActive = true;
       notificationText =

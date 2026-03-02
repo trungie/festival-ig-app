@@ -95,6 +95,7 @@ body {
 }
 .nav-btn:active { opacity: 0.85; transform: scale(0.97); }
 .nav-btn.back { background: #333; color: #eee; }
+.nav-btn.top { background: #333; color: #eee; }
 .nav-btn.next { background: #3b82f6; color: #fff; }
 
 /* ── Connection Indicator ── */
@@ -135,6 +136,7 @@ body {
 
 <div class="nav-row">
   <button class="nav-btn back" onclick="send({type:'back'})">&#9664; Back</button>
+  <button class="nav-btn top" onclick="send({type:'top'})">&#9650; Top</button>
   <button class="nav-btn next" onclick="send({type:'next'})">Next &#9654;</button>
 </div>
 
@@ -251,6 +253,7 @@ function connect() {
         updateUI(msg);
         break;
       case 'scroll':
+      case 'scroll-top':
         currentState.currentIndex = msg.currentIndex;
         currentState.notificationActive = msg.notificationActive || false;
         updateUI(currentState);
