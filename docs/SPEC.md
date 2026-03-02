@@ -58,6 +58,7 @@ A fake Instagram feed that appears as an overlay on a live stream for ULTRA JUJU
 1. **Overlay** (`overlay.html`) — Display only. iPhone 15 Pro frame, transparent background. Loaded in OBS.
 2. **Admin** (`admin.html`) — Desktop. Shows all posts, scroll controls, notification controls, connection status.
 3. **Control** (`control.html`) — Mobile. Mirrors the feed. Tap notification to dismiss.
+4. **Controls** (`controls.html` at `/controls`) — Mobile-optimized streamer remote. Big Next/Back buttons, dismiss notification, post counter. Dark theme, no scrolling, fills phone screen.
 
 ## Edge Cases
 - WebSocket disconnects: auto-reconnect every 2 seconds, full state re-sync on connect

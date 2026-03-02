@@ -11,6 +11,7 @@ Fake Instagram feed overlay for a live stream. Displays inside an iPhone 15 Pro 
 - `overlay.html` — OBS Browser Source (iPhone frame + IG feed)
 - `admin.html` — Remote control panel (Trung)
 - `control.html` — Phone viewer (Julienne), tap-to-dismiss notifications
+- `controls.html` — Streamer controls (Next/Back/Dismiss), mobile-optimized
 - `posts.json` — Post data (`active` + `hidden` arrays)
 
 ## Running

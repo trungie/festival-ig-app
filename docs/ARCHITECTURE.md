@@ -24,6 +24,14 @@
 │  - Feed viewer           │
 │  - Tap to dismiss notifs │
 └──────────────────────────┘
+
+  Streamer's phone (local network)
+┌──────────────────────────┐
+│  controls.html (/controls)│
+│  - Next / Back           │
+│  - Dismiss notification  │
+│  - Post counter          │
+└──────────────────────────┘
 ```
 
 ## File Structure
@@ -39,6 +47,7 @@ festival-ig-app/
 ├── overlay.html           ← OBS Browser Source
 ├── admin.html             ← Remote admin panel
 ├── control.html           ← Phone viewer for Julienne
+├── controls.html          ← Streamer controls (mobile-optimized)
 ├── posts.json             ← Post data (active + hidden)
 ├── ig.html                ← Original IG template reference
 └── assets/
@@ -57,7 +66,7 @@ festival-ig-app/
 ### WebSocket Server
 Implemented from scratch using `http` upgrade + `crypto` for the handshake. No `ws` package.
 
-**Client roles**: `overlay`, `control`, `admin` — set via `register` message on connect.
+**Client roles**: `overlay`, `control`, `controls`, `admin` — set via `register` message on connect.
 
 **Server state**:
 ```js
